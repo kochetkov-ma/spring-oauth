@@ -1,0 +1,54 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
+final OperatingSystem os = DefaultNativePlatform.currentOperatingSystem
+def flutterExec = os.isWindows() ? 'flutter.bat' : 'flutter'
+def dartExec = os.isWindows() ? 'dart.bat' : 'dart'
+
+task doctorFlutter(type: Exec) {
+    group 'flutter'
+    description 'Flutter doctor'
+
+    commandLine flutterExec, 'doctor'
+}
+
+task checkFlutter(type: Exec) {
+    group 'flutter'
+    description 'Flutter check'
+
+    commandLine flutterExec, '--version'
+}
+
+task checkDart(type: Exec) {
+    group 'flutter'
+    description 'Dart check'
+
+    commandLine dartExec, '--version'
+}
+
+task createWebProject(type: Exec) {
+    group 'flutter'
+    description 'Create new project'
+
+    def platform = 'web'
+    commandLine flutterExec, 'create', '.', '--platform', platform, '--project-name', 'spring_oauth_frontend'
+}
+
+task cleanProject() {
+    group 'flutter'
+    description 'Clean entire project'
+    outputs.upToDateWhen { false }
+
+    doFirst {
+        System.err.println("> Are you sure to delete all files in the '$projectDir'? [yes / no]: " as String)
+        def input = new Scanner(System.in)
+        def answer = input.nextLine()
+        def needCleanUp = answer.equalsIgnoreCase('yes')
+        if (needCleanUp) {
+            def files = files(file(projectDir).listFiles()).filter { !it.name.endsWith('build.gradle') }
+            System.err.println('> Files and dirs will be deleted: ' + files.files as String)
+            delete files
+        } else {
+            System.err.println('> Nothing will be deleted...')
+        }
+    }
+}

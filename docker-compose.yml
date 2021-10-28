@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+
+  frontend:
+    image: registry.gitlab.com/iminvestor/imin/imin-web:latest
+    container_name: imin-web
+    environment:
+      BACKEND_HOST: imin-back
+      BACKEND_PORT: 8080
+    ports:
+      - 8080:80
+    depends_on:
+      - imin-back
+
+  backend:
+    image: registry.gitlab.com/iminvestor/imin/imin-back:latest
+    container_name: imin-back
+    environment:
+      SPRING_PROFILES_ACTIVE: compose
+    ports:
+      - 8002:8080
+      - 9000:9000
+    depends_on:
+      - pg
+
+  third-party-backend:
+    image: postgres:13.3-alpine
+    container_name: pg
+    environment:
+      POSTGRES_DB: imin
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432

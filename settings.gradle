@@ -1,0 +1,20 @@
+rootProject.name = 'spring-oauth'
+
+include 'third-party-backend'
+include 'backend'
+include 'frontend'
+
+enableFeaturePreview('VERSION_CATALOGS')
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        libs {
+            alias('kotlin').toPluginId('org.jetbrains.kotlin.jvm').version('1.5.31')
+            alias('ben-manes').toPluginId('com.github.ben-manes.versions').version('0.39.0')
+            alias('spring-boot').toPluginId('org.springframework.boot').version('2.5.6')
+            alias('spring-dependency-management').toPluginId('io.spring.dependency-management').version('1.0.11.RELEASE')
+
+            alias('testcontainers').to('org.testcontainers', 'testcontainers-bom').version('1.16.2')
+        }
+    }
+}
